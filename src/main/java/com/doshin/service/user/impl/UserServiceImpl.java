@@ -14,12 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.doshin.service.user.bao.UserBao;
 import com.doshin.service.user.model.UserVO;
+import com.doshin.spring.UserGauageService;
 
 @RestController
 public class UserServiceImpl {
 
 	@Autowired
 	UserBao userBao;
+	
+	@Autowired
+	UserGauageService userGauageService;
 
 	@PostMapping(value ="/user", consumes = MediaType.APPLICATION_XML_VALUE,
 			produces = MediaType.APPLICATION_XML_VALUE)
@@ -46,9 +50,11 @@ public class UserServiceImpl {
 
 	@GetMapping(value = "/user/{userid}", produces = MediaType.APPLICATION_XML_VALUE)
 	public @ResponseBody  UserVO findByUserId(@PathVariable("userid") Integer userId) {
-		System.out.println("Doshin");
-		System.out.println(userId);
-		return userBao.findByUserId(userId);
+		userGauageService.increment("userid.call.count");
+		Long start = System.nanoTime();
+		UserVO user = userBao.findByUserId(userId);
+		userGauageService.submit("userid.avg.time", (double) ((System.nanoTime() - start)/1000));
+		return user;
 	}
 
 }
