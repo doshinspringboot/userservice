@@ -45,7 +45,8 @@ dependencies {
 	compile('org.springframework.cloud:spring-cloud-starter-config')
 	compile("org.springframework.boot:spring-boot-devtools") 
 	compile('org.postgresql:postgresql')
-	compile('org.flywaydb:flyway-core')	
+	compile('org.flywaydb:flyway-core')
+	compile('org.springframework.cloud:spring-cloud-starter-eureka')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
