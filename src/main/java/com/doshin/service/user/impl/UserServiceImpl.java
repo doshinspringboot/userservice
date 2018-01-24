@@ -1,6 +1,8 @@
 package com.doshin.service.user.impl;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,6 +26,8 @@ public class UserServiceImpl {
 	
 	@Autowired
 	UserGauageService userGauageService;
+	
+	private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
 	@PostMapping(value ="/user", consumes = MediaType.APPLICATION_XML_VALUE,
 			produces = MediaType.APPLICATION_XML_VALUE)
@@ -50,9 +54,12 @@ public class UserServiceImpl {
 
 	@GetMapping(value = "/user/{userid}", produces = MediaType.APPLICATION_XML_VALUE)
 	public @ResponseBody  UserVO findByUserId(@PathVariable("userid") Integer userId) {
+		logger.info("User service started for : "  +userId );
 		userGauageService.increment("userid.call.count");
 		Long start = System.nanoTime();
 		UserVO user = userBao.findByUserId(userId);
+		logger.info("User service returning for : "  +userId + " User : " + user);
+
 		userGauageService.submit("userid.avg.time", (double) ((System.nanoTime() - start)/1000));
 		return user;
 	}
